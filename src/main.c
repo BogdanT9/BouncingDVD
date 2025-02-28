@@ -106,11 +106,24 @@ void destroy_exit() {
 int main() {
     init_lib();
     load_image();
+
+    unsigned int start_time = SDL_GetTicks();
+    unsigned int end_time = 0;
+    double delta = 0;
+
     while (running) {
         handle_input();
-        update_image();
-        draw_screen();
+
+        start_time = SDL_GetTicks();
+        delta = (double)(start_time - end_time);
+
+        if (delta >= 1000 / (double)FPS) {
+            update_image();
+            draw_screen();
+            end_time = start_time;
+        }
     }
+
     destroy_exit();
     return 0;
 }
