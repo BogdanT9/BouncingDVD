@@ -9,7 +9,7 @@
 
 #define SCREEN_WIDTH 720
 #define SCREEN_HEIGHT 450
-#define IMG_PATH "/home/bogdan/Projects/DVD/image/DVD.png"
+#define IMG_PATH "../image/DVD.png"
 #define STARTING_DX 5
 #define STARTING_DY 5
 #define FPS 60
