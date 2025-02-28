@@ -6,8 +6,11 @@ SDL_Renderer* renderer = NULL;
 bool running = true;
 Image* img = NULL;
 
+static Uint8* audio_pos;
+static Uint32 audio_len;
+
 void init_lib() {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
         exit(1);
     }

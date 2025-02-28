@@ -9,7 +9,8 @@
 
 #define SCREEN_WIDTH 720
 #define SCREEN_HEIGHT 450
-#define IMG_PATH "../image/DVD.png"
+#define IMG_PATH "../assets/DVD.png"
+#define SOUND_PATH "../assets/VineBoom.mp3"
 #define STARTING_DX 5
 #define STARTING_DY 5
 #define FPS 60
