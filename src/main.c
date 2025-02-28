@@ -33,16 +33,20 @@ void init_lib() {
     }
 }
 
-Image* load_image(const char* path) {
-    Image* img = (Image*)malloc(sizeof(Image));
-    img->img = IMG_LoadTexture(renderer, path);
-    SDL_QueryTexture(img->img, NULL, NULL, &img->w, &img->h);
+void load_image() {
+    SDL_Surface* imageSurface = IMG_Load(IMG_PATH);
+    img = (Image*)malloc(sizeof(Image));
+    img->dx = STARTING_DX;
+    img->dy = STARTING_DY;
+    img->img = SDL_CreateTextureFromSurface(renderer, imageSurface);
+    SDL_FreeSurface(imageSurface);
+    int w, h;
+    SDL_QueryTexture(img->img, NULL, NULL, &w, &h);
     img->texr = (SDL_Rect*)malloc(sizeof(SDL_Rect));
     img->texr->x = SCREEN_WIDTH / 2;
     img->texr->y = SCREEN_HEIGHT / 2;
-    img->texr->w = img->w * 2;
-    img->texr->h = img->h * 2;
-    return img;
+    img->texr->w = w / 8;
+    img->texr->h = h / 8;
 }
 
 void handle_input() {
@@ -63,28 +67,45 @@ void handle_input() {
     }
 }
 
-void update_image() {}
+void handle_collision() {
+    if (img->texr->x <= 0 || img->texr->x + img->texr->w >= SCREEN_WIDTH) {
+        img->dx = -img->dx;
+    }
+    if (img->texr->y <= 0 || img->texr->y + img->texr->h >= SCREEN_HEIGHT) {
+        img->dy = -img->dy;
+    }
+}
+
+void update_image() {
+    img->texr->x += img->dx;
+    img->texr->y += img->dy;
+    handle_collision();
+}
 
 void draw_screen() {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0xFF, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
+
+    SDL_RenderFillRect(renderer, img->texr);
+    SDL_RenderCopy(renderer, img->img, NULL, img->texr);
+
     SDL_RenderPresent(renderer);
 }
 
 void destroy_exit() {
     SDL_DestroyRenderer(renderer);
-    renderer = NULL;
     SDL_FreeSurface(screenSurface);
     SDL_DestroyTexture(img->img);
+    free(img->texr);
+    free(img);
     SDL_DestroyWindow(window);
-    window = NULL;
     SDL_Quit();
     IMG_Quit();
 }
 
 int main() {
     init_lib();
-    img = load_image(IMG_PATH);
+    load_image();
     while (running) {
         handle_input();
         update_image();

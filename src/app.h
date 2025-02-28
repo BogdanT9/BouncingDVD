@@ -9,11 +9,14 @@
 
 #define SCREEN_WIDTH 720
 #define SCREEN_HEIGHT 450
-#define IMG_PATH "../image/DVD_Blue.png"
+#define IMG_PATH "/home/bogdan/Projects/DVD/image/DVD.png"
+#define STARTING_DX 1
+#define STARTING_DY 1
 
 typedef struct {
     SDL_Texture* img;
     int w, h;
+    int dx, dy;
     SDL_Rect* texr;
 } Image;
 
@@ -22,4 +25,5 @@ void handle_input();
 void update_image();
 void draw_screen();
 void destroy_exit();
-Image* load_image(const char* path);
+void load_image();
+void handle_collision();
