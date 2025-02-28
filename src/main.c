@@ -4,10 +4,15 @@ SDL_Window* window = NULL;
 SDL_Surface* screenSurface = NULL;
 SDL_Renderer* renderer = NULL;
 bool running = true;
+Image* img = NULL;
 
-void init() {
+void init_lib() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
+        exit(1);
+    }
+    if (IMG_Init(IMG_INIT_PNG) == 0) {
+        fprintf(stderr, "IMG_Init Error: %s\n", IMG_GetError());
         exit(1);
     }
     window = SDL_CreateWindow("Bouncing DVD Logo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -16,7 +21,7 @@ void init() {
         fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         exit(1);
     }
-    renderer = SDL_CreateRenderer(window, -1, 0);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (renderer == NULL) {
         fprintf(stderr, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
         exit(1);
@@ -28,7 +33,17 @@ void init() {
     }
 }
 
-void setup() {}
+Image* load_image(const char* path) {
+    Image* img = (Image*)malloc(sizeof(Image));
+    img->img = IMG_LoadTexture(renderer, path);
+    SDL_QueryTexture(img->img, NULL, NULL, &img->w, &img->h);
+    img->texr = (SDL_Rect*)malloc(sizeof(SDL_Rect));
+    img->texr->x = SCREEN_WIDTH / 2;
+    img->texr->y = SCREEN_HEIGHT / 2;
+    img->texr->w = img->w * 2;
+    img->texr->h = img->h * 2;
+    return img;
+}
 
 void handle_input() {
     SDL_Event event;
@@ -48,25 +63,32 @@ void handle_input() {
     }
 }
 
-void update() {}
+void update_image() {}
 
-void draw() {}
+void draw_screen() {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0xFF, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+}
 
 void destroy_exit() {
     SDL_DestroyRenderer(renderer);
     renderer = NULL;
+    SDL_FreeSurface(screenSurface);
+    SDL_DestroyTexture(img->img);
     SDL_DestroyWindow(window);
     window = NULL;
     SDL_Quit();
+    IMG_Quit();
 }
 
 int main() {
-    init();
-    setup();
+    init_lib();
+    img = load_image(IMG_PATH);
     while (running) {
         handle_input();
-        update();
-        draw();
+        update_image();
+        draw_screen();
     }
     destroy_exit();
     return 0;

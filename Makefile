@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall
-LDFLAGS = -lSDL2
+LDFLAGS = -lSDL2 -lSDL2_image
 SRC_DIR = ./src
 BUILD_DIR = ./build
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
