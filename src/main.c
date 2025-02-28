@@ -52,10 +52,11 @@ void update() {}
 
 void draw() {}
 
-void close() {
+void destroy_exit() {
     SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindowSurface(window);
+    renderer = NULL;
     SDL_DestroyWindow(window);
+    window = NULL;
     SDL_Quit();
 }
 
@@ -67,6 +68,6 @@ int main() {
         update();
         draw();
     }
-    close();
+    destroy_exit();
     return 0;
 }

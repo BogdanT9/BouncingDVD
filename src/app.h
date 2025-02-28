@@ -14,4 +14,4 @@ void setup();
 void handle_input();
 void update();
 void draw();
-void close();
+void destroy_exit();
