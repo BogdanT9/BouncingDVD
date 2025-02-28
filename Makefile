@@ -19,7 +19,7 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
 run:
-	./build/app
+	cd ./build/ && ./app
 
 clean:
 	rm -rf $(BUILD_DIR)
